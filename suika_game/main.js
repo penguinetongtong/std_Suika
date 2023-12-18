@@ -1,4 +1,4 @@
-import { Bodies, Engine, Render, Runner, World } from "matter-js";
+import { Bodies, Engine, Body, Render, Runner, World } from "matter-js";
 import { FRUITS } from "./fruits";
 
 //배경화면 color
@@ -41,18 +41,51 @@ World.add(world, [leftWall, rightWall, ground, topLine]);
 Render.run(render);
 Runner.run(engine);
 
+let currentBody = null;
+let currentFruit = null;
+
 //과일 떨어뜨리기
 function addFruit() {
-  const index = 7;
+  const index = Math.floor(Math.random() * 5);
   const fruit = FRUITS[index];
 
   const body = Bodies.circle(300, 50, fruit.radius, {
+    isSleeping: true,
     render: {
       sprite: { texture: `${fruit.label}.png` }
-    }
+    }, 
+    restitution: 0.2,
   });
 
+  currentBody = body;
+  currentFruit = fruit;
+
   World.add(world, body);
+}
+
+window.onkeydown = (event) => {
+  switch (event.code) {
+    case "KeyA":
+      Body.setPosition(currentBody, {
+        x: currentBody.position.x - 10,
+        y: currentBody.position.y,
+      });
+      break;
+
+      case "KeyD":
+        Body.setPosition(currentBody, {
+          x: currentBody.position.x + 10,
+          y: currentBody.position.y,
+        });
+      break;
+      
+      case "KeyS":
+        currentBody.isSleeping = false;
+
+        addFruit();
+        break;
+
+  }
 }
 
 addFruit();
