@@ -32,6 +32,7 @@ const ground = Bodies.rectangle(310, 820, 620, 60, { // x,y,height,width
 });
 /** 천장 벽 */
 const topLine = Bodies.rectangle(310, 150, 620, 2, { // x,y,height,width
+  name: "topLine",
   isStatic: true,
   isSensor: true,
   render: {fillStyle: "#E6B143"}
@@ -85,9 +86,9 @@ window.onkeydown = (event) => {
       break;
 
     case "KeyD": 
-      if (currentBody.position.x - currentFruit.radius < 590)
+      if (currentBody.position.x - currentFruit.radius < 590) // 620 - 30 = 590 오른쪽벽 끝
       Body.setPosition(currentBody,{
-        x: currentBody.position.x + 10, // A 키를 두를때마다 왼쪽으로 10만큼 이동
+        x: currentBody.position.x + 10, // A 키를 두를때마다 오른쪽으로 10만큼 이동
         y: currentBody.position.y,
       });
       break;
@@ -129,6 +130,13 @@ Events.on(engine, "collisionStart", (event) =>{
       );
       World.add(world, newBody); // 생성한 두 과일은 World에 적용
     }
+
+    // 패배조건 판단
+    if (!disableAction &&
+      (collision.bodyA.name === "topLine" || collision.bodyB.name === "topLine")){
+      alert("Game over!");
+    }
+
   });
 });
 addFruit();
