@@ -1,5 +1,5 @@
 import { Bodies, Engine, Render, Runner, World } from "matter-js";
-//import { FRUITS } from "./fruits";
+import { FRUITS } from "./fruits";
 
 //배경화면 color
 const engine = Engine.create();
@@ -32,23 +32,27 @@ const ground = Bodies.rectangle(310, 820, 620, 60,{
 
 const topLine = Bodies.rectangle(310, 150, 620, 2,{
   isStatic: true,
+  isSensor: true,
   render :{fillStyle: "#E6B143"}
 });
 
 World.add(world, [leftWall, rightWall, ground, topLine]);
 
 Render.run(render);
-Render.run(engine);
+Runner.run(engine);
 
-// //과일 떨어뜨리기
-// function addFruit() {
-//   const index = 7;
-//   const fruit = FRUITS[index];
+//과일 떨어뜨리기
+function addFruit() {
+  const index = 7;
+  const fruit = FRUITS[index];
 
-//   const body = Bodies.circle(300, 50, fruit.radius, {
-//     index:index, 
-//     render: {
-//       sprite: {texture: '${fruit.name}.png'}
-//     }
-//   })
-// }
+  const body = Bodies.circle(300, 50, fruit.radius, {
+    render: {
+      sprite: { texture: `${fruit.label}.png` }
+    }
+  });
+
+  World.add(world, body);
+}
+
+addFruit();
