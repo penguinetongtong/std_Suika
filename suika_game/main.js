@@ -77,17 +77,21 @@ window.onkeydown = (event) => {
   }
   switch (event.code) {
     case "KeyA": 
+      if (currentBody.position.x - currentFruit.radius > 30) // 벽에 과일이 닿으면 더이상 못가게
       Body.setPosition(currentBody,{
         x: currentBody.position.x - 10, // A 키를 두를때마다 왼쪽으로 10만큼 이동
         y: currentBody.position.y,
       });
       break;
+
     case "KeyD": 
+      if (currentBody.position.x - currentFruit.radius < 590)
       Body.setPosition(currentBody,{
         x: currentBody.position.x + 10, // A 키를 두를때마다 왼쪽으로 10만큼 이동
         y: currentBody.position.y,
       });
       break;
+    
     case "KeyS": 
       currentBody.isSleeping = false;
       disableAction = true;
