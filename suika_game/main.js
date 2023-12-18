@@ -1,5 +1,5 @@
 import { Bodies, Engine, Render, Runner, World } from "matter-js";
-import { FRUITS } from "./fruits"
+import { FRUITS } from "./fruits";
 
 const engine = Engine.create();
 const render = Render.create({
@@ -33,10 +33,27 @@ const ground = Bodies.rectangle(310, 820, 620, 60, { // x,y,height,width
 /** 천장 벽 */
 const topLine = Bodies.rectangle(310, 150, 620, 2, { // x,y,height,width
   isStatic: true,
+  isSensor: true,
   render: {fillStyle: "#E6B143"}
 });
 
-World.add(world, [leftWall, rightWall, ground]);
+World.add(world, [leftWall, rightWall, ground, topLine]);
 
 Render.run(render);
-Render.run(engine);
+Runner.run(engine);
+
+/** 과일을 생성하는 함수 */
+function addFruit(){
+  const index = 7;
+  const fruit = FRUITS[index];
+
+  const body = Bodies.circle(300, 50, fruit.radius,{
+    render:{
+      sprite: { texture: `${fruit.label}.png` }
+    }
+  });
+
+  World.add(world, body);
+}
+
+addFruit();

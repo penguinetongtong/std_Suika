@@ -1,58 +1,46 @@
-/** 이름, 반지름, 색상 으로 이루어진 파일 */
 export const FRUITS = [
-    {
-      label: "cherry",
-      radius: 40 / 2,
-      color: "#F20306",
-    },
-    {
-      label: "strawberry",
-      radius: 50 / 2,
-      color: "#FF624C",
-    },
-    {
-      label: "grape",
-      radius: 72 / 2,
-      color: "#A969FF",
-    },
-    {
-      label: "kumkwat",
-      radius: 85 / 2,
-      color: "#FFAF02",
-    },
-    {
-      label: "orange",
-      radius: 106 / 2,
-      color: "#FC8611",
-    },
-    {
-      label: "apple",
-      radius: 140 / 2,
-      color: "#F41615",
-    },
-    {
-      label: "pear",
-      radius: 160 / 2,
-      color: "#FDF176",
-    },
-    {
-      label: "peach",
-      radius: 196 / 2,
-      color: "#FEB6AC",
-    },
-    {
-      label: "pineapple",
-      radius: 220 / 2,
-      color: "#F7E608",
-    },
-    {
-      label: "melon",
-      radius: 270 / 2,
-      color: "#89CE13",
-    },
-    {
-      label: "watermelon",
-      radius: 300 / 2,
-      color: "#26AA1E",
-    },
-  ];
+  {
+    label: "00_cherry",
+    radius: 33 / 2,
+  },
+  {
+    label: "01_strawberry",
+    radius: 48 / 2,
+  },
+  {
+    label: "02_grape",
+    radius: 61 / 2,
+  },
+  {
+    label: "03_gyool",
+    radius: 69 / 2,
+  },
+  {
+    label: "04_orange",
+    radius: 89 / 2,
+  },
+  {
+    label: "05_apple",
+    radius: 114 / 2,
+  },
+  {
+    label: "06_pear",
+    radius: 129 / 2,
+  },
+  {
+    label: "07_peach",
+    radius: 156 / 2,
+  },
+  {
+    label: "08_pineapple",
+    radius: 177 / 2,
+  },
+  {
+    label: "09_melon",
+    radius: 220 / 2,
+  },
+  {
+    label: "10_watermelon",
+    radius: 259 / 2,
+  },
+];
