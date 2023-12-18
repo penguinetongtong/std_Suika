@@ -31,6 +31,7 @@ const ground = Bodies.rectangle(310, 820, 620, 60,{
 });
 
 const topLine = Bodies.rectangle(310, 150, 620, 2,{
+  name: "topLine",
   isStatic: true,
   isSensor: true,
   render :{fillStyle: "#E6B143"}
@@ -45,6 +46,10 @@ let currentBody = null;
 let currentFruit = null;
 //움직이지 못하게 함
 let disableAction = false;
+//부드럽게 왼쪽 오른쪽 이동
+let interval = null;
+//*숙제 : 성공조건 만들기
+let num_suika = 0;
 
 //과일 떨어뜨리기
 function addFruit() {
@@ -73,21 +78,34 @@ window.onkeydown = (event) => {
   if (disableAction) {
     return; 
   }
-  switch (event.code) {
+    switch (event.code) {
     //왼쪽으로 10만큼 이동
-    case "KeyA":
-      Body.setPosition(currentBody, {
-        x: currentBody.position.x - 10,
-        y: currentBody.position.y,
-      });
+      case "KeyA":
+        if(interval)
+        return;
+      //부드럽게 왼쪽 오른쪽 이동 5는 5mm씩 이동! 이었나?
+      interval = setInterval(() => {
+        if(currentBody.position.x - currentFruit.radius >30)
+          Body.setPosition(currentBody, {
+            x: currentBody.position.x - 1,
+            y: currentBody.position.y,
+        });
+      },5);
+  
       break;
 
       case "KeyD":
+        if(interval)
+        return;
+
         //오른쪽으로 10만큼 이동
-        Body.setPosition(currentBody, {
-          x: currentBody.position.x + 10,
-          y: currentBody.position.y,
-        });
+        interval = setInterval(() => {
+          if(currentBody.position.x - currentFruit.radius < 590)
+            Body.setPosition(currentBody, {
+              x: currentBody.position.x + 1,
+              y: currentBody.position.y,
+          });
+        },5);
       break;
       //과일 떨어짐
       case "KeyS":
@@ -104,15 +122,52 @@ window.onkeydown = (event) => {
         break;
   }
 }
+
+window.onkeyup = (event) => {
+  switch(event.code){
+    case"KeyA":
+    case"KeyD":
+      clearInterval(interval);
+      interval = null;
+  }
+}
+
 //충돌 시 아래 코드 실행
 Events.on(engine, "collisionStart", (event) => {
   event.pairs.forEach((collision) => {
     if(collision.bodyA.index === collision.bodyB.index) {
-      World.remove(world, [collision.bodyA, collision.bodyB])
+      const index = collision.bodyA.index;
+      //수박인지 아닌지 확인 수박이면 return
+      if (index === FRUITS.length - 1){
+        return;
+      }
+      //수박이 아닐 경우 아래 코드 실행
+      World.remove(world, [collision.bodyA, collision.bodyB]);
+      //새 과일은 다음(+1) index
+      const newFruit = FRUITS[index + 1];
+
+      const newBody = Bodies.circle(
+        //충돌이 일어나는 x, y 지점에 새 과일 생성
+        collision.collision.supports[0].x,
+        collision.collision.supports[0].y,
+        newFruit.radius,
+        {
+          //생성되는 새 과일의 이미지 파일
+          render: {
+            sprite: { texture: `${newFruit.label}.png` }
+          },
+          //생성되는 새 과일의 index 순서? 넘버?
+          index: index +1,
+        }
+      );
+
+      World.add(world, newBody);
     }
+    //실패조건 top line을 만나면 game over
+      if(!disableAction && (collision.bodyA.name === "topLine" || collision.bodyB.name === "topLine"))
+      alert("Game over");
   });
   
-
-})
+});
 
 addFruit();
