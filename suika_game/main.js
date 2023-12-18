@@ -42,18 +42,28 @@ World.add(world, [leftWall, rightWall, ground, topLine]);
 Render.run(render);
 Runner.run(engine);
 
+let currentBody = null;
+let currentFruit = null;
+
 /** 과일을 생성하는 함수 */
 function addFruit(){
-  const index = 7;
+  const index = Math.floor(Math.random() * 5);
   const fruit = FRUITS[index];
 
   const body = Bodies.circle(300, 50, fruit.radius,{
+    isSleeping: true, // 이벤트 전까지 더이상 떨어지지 않고 keep 한 상태가 됨.
     render:{
       sprite: { texture: `${fruit.label}.png` }
-    }
+    },
+    restitution: 0.2 // 과일의 탄성 설정
   });
+
+
+  currentBody = body;
+  currentFruit = fruit;
 
   World.add(world, body);
 }
+
 
 addFruit();

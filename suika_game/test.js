@@ -68,7 +68,7 @@ function addCurrentFruit() {
 
   World.add(world, body);
 }
-
+ /**  */
 function getRandomFruit() {
   const randomIndex = Math.floor(Math.random() * 5);
   const fruit = FRUITS[randomIndex];
