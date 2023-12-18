@@ -1,24 +1,24 @@
-import './style.css'
-import javascriptLogo from './javascript.svg'
-import viteLogo from '/vite.svg'
-import { setupCounter } from './counter.js'
+import { Engine, Render, Runner, World } from "matter-js";
+import {  } from "matter-js";
 
-document.querySelector('#app').innerHTML = `
-  <div>
-    <a href="https://vitejs.dev" target="_blank">
-      <img src="${viteLogo}" class="logo" alt="Vite logo" />
-    </a>
-    <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript" target="_blank">
-      <img src="${javascriptLogo}" class="logo vanilla" alt="JavaScript logo" />
-    </a>
-    <h1>Hello Vite!</h1>
-    <div class="card">
-      <button id="counter" type="button"></button>
-    </div>
-    <p class="read-the-docs">
-      Click on the Vite logo to learn more
-    </p>
-  </div>
-`
+const engine = Engine.create();
+const render = Render.create({
+  engine,
+  element: document.body,
+  option: {
+    wireframes : false,
+    background: "#F7F4C8", // background color
+    width: 620,
+    height: 850,
+  }
+});
+// const world = engine.world;
 
-setupCounter(document.querySelector('#counter'))
+// const leftWall = Bodies.rectangle(15, 395, 30, 790,{
+//   render :{fillStyle: "#E6B143"}
+// }); // x,y,width,height 순서
+
+// World.add(world, [leftWall]);
+
+Render.run(render);
+Render.run(engine);
