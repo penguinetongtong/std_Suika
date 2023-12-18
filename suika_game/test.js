@@ -1,4 +1,4 @@
-import { Engine, Render, Runner, Bodies, World} from "matter-js";
+import { Engine, Render, Runner, Bodies, World, Body, Events} from "matter-js";
 import { FRUITS } from "./fruits";
 
 const engine = Engine.create();
@@ -50,6 +50,8 @@ Runner.run(engine);
 
 let currentBody = null;
 let currentFruit = null;
+let interval = null;
+let disableAction = false;
 
 function addCurrentFruit() {
   const randomFruit = getRandomFruit();
@@ -68,7 +70,7 @@ function addCurrentFruit() {
 
   World.add(world, body);
 }
- /**  */
+
 function getRandomFruit() {
   const randomIndex = Math.floor(Math.random() * 5);
   const fruit = FRUITS[randomIndex];
@@ -79,4 +81,112 @@ function getRandomFruit() {
   return fruit;
 }
 
+window.onkeydown = (event) => {
+  event.preventDefault();
+
+  if (disableAction)
+    return;
+
+  switch (event.code) {
+    case "KeyA": // ArrowLeft
+      if (interval)
+        return;
+
+      interval = setInterval(() => {
+        if (currentBody.position.x - currentFruit.radius > 30)
+          Body.setPosition(currentBody, {
+            x: currentBody.position.x - 1,
+            y: currentBody.position.y,
+          });
+      }, 5);
+      break;
+
+    case "KeyD": // ArrowRight
+      if (interval)
+        return;
+
+      interval = setInterval(() => {
+        if (currentBody.position.x + currentFruit.radius < 590)
+          Body.setPosition(currentBody, {
+            x: currentBody.position.x + 1,
+            y: currentBody.position.y,
+          });
+      }, 5);
+      break;
+
+    case "KeyS": // Space
+      disableAction = true;
+
+      currentBody.isSleeping = false;
+
+      setTimeout(() => {
+        addCurrentFruit();
+        disableAction = false;
+      }, 1000);
+
+  }
+};
+
+window.onkeyup = (event) => {
+  switch (event.code) {
+    case "KeyA": // ArrowLeft
+    case "KeyD": // ArrowRight
+      clearInterval(interval);
+      interval = null;
+  }
+};
+
+Events.on(engine, "collisionStart", (event) => {
+  event.pairs.forEach((collision) => {
+    if (collision.bodyA.label === collision.bodyB.label) {
+      World.remove(world, [collision.bodyA, collision.bodyB]);
+
+      const index = FRUITS.findIndex((fruit) => 
+        fruit.label === collision.bodyA.label
+      );
+
+      if (index === FRUITS.length - 1)
+        return;
+
+      const newFruit = FRUITS[index + 1];
+
+      const newBody = Bodies.circle(
+        collision.collision.supports[0].x,
+        collision.collision.supports[0].y,
+        newFruit.radius,
+        {
+          render: {
+            sprite: { texture: `${newFruit.label}.png` },
+          },
+          label: newFruit.label,
+        }
+      );
+
+      World.add(world, newBody);
+    }
+
+    if (
+      (collision.bodyA.label === "topLine" || collision.bodyB.label === "topLine")
+      && !disableAction
+    ) {
+      alert("Game over");
+    }
+  });
+});
+
 addCurrentFruit();
+
+window.onkeydown = (event) => {
+  switch (event.code) {
+    case "keyA": 
+      Body.setPosition(currentBody,{
+        x: currentBody.position.x - 10, // A 키를 두를때마다 왼쪽으로 10만큼 이동
+        y: currentBody.position.y,
+      });
+      break;
+    case "keyD": 
+      break;
+    case "keyS": 
+      break;
+  }
+}

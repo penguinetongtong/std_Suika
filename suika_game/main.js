@@ -1,4 +1,4 @@
-import { Bodies, Engine, Render, Runner, World } from "matter-js";
+import { Bodies, Engine, Render, Runner, World, Body } from "matter-js";
 import { FRUITS } from "./fruits";
 
 const engine = Engine.create();
@@ -64,6 +64,27 @@ function addFruit(){
 
   World.add(world, body);
 }
+/** 키보드 입력 구현
+ * onkeydown : 자바스크립트의 기본적인 키보드 이벤트 함수 */
 
-
+window.onkeydown = (event) => {
+  switch (event.code) {
+    case "KeyA": 
+      Body.setPosition(currentBody,{
+        x: currentBody.position.x - 10, // A 키를 두를때마다 왼쪽으로 10만큼 이동
+        y: currentBody.position.y,
+      });
+      break;
+    case "KeyD": 
+      Body.setPosition(currentBody,{
+        x: currentBody.position.x + 10, // A 키를 두를때마다 왼쪽으로 10만큼 이동
+        y: currentBody.position.y,
+      });
+      break;
+    case "KeyS": 
+      currentBody.isSleeping = false;
+      addFruit();
+      break;
+  }
+}
 addFruit();
