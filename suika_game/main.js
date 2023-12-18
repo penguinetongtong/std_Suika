@@ -1,24 +1,54 @@
-import './style.css'
-import javascriptLogo from './javascript.svg'
-import viteLogo from '/vite.svg'
-import { setupCounter } from './counter.js'
+import { Bodies, Engine, Render, Runner, World } from "matter-js";
+//import { FRUITS } from "./fruits";
 
-document.querySelector('#app').innerHTML = `
-  <div>
-    <a href="https://vitejs.dev" target="_blank">
-      <img src="${viteLogo}" class="logo" alt="Vite logo" />
-    </a>
-    <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript" target="_blank">
-      <img src="${javascriptLogo}" class="logo vanilla" alt="JavaScript logo" />
-    </a>
-    <h1>Hello Vite!</h1>
-    <div class="card">
-      <button id="counter" type="button"></button>
-    </div>
-    <p class="read-the-docs">
-      Click on the Vite logo to learn more
-    </p>
-  </div>
-`
+//배경화면 color
+const engine = Engine.create();
+const render = Render.create({
+  engine,
+  element: document.body,
+  options: {
+    wireframes : false,
+    background: "#F7F4C8", 
+    width: 620,
+    height: 850,
+  }
+});
+const world = engine.world;
+//배경화면 테두리 (x축, y축, 너비, 높이)
+const leftWall = Bodies.rectangle(15, 395, 30, 790,{
+  isStatic: true,
+  render :{fillStyle: "#E6B143"}
+});
 
-setupCounter(document.querySelector('#counter'))
+const rightWall = Bodies.rectangle(605, 395, 30, 790,{
+  isStatic: true,
+  render :{fillStyle: "#E6B143"}
+});
+
+const ground = Bodies.rectangle(310, 820, 620, 60,{
+  isStatic: true,
+  render :{fillStyle: "#E6B143"}
+});
+
+const topLine = Bodies.rectangle(310, 150, 620, 2,{
+  isStatic: true,
+  render :{fillStyle: "#E6B143"}
+});
+
+World.add(world, [leftWall, rightWall, ground, topLine]);
+
+Render.run(render);
+Render.run(engine);
+
+// //과일 떨어뜨리기
+// function addFruit() {
+//   const index = 7;
+//   const fruit = FRUITS[index];
+
+//   const body = Bodies.circle(300, 50, fruit.radius, {
+//     index:index, 
+//     render: {
+//       sprite: {texture: '${fruit.name}.png'}
+//     }
+//   })
+// }
