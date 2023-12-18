@@ -1,4 +1,4 @@
-import { Bodies, Engine, Render, Runner, World, Body } from "matter-js";
+import { Bodies, Engine, Render, Runner, World, Body, Events } from "matter-js";
 import { FRUITS } from "./fruits";
 
 const engine = Engine.create();
@@ -54,6 +54,7 @@ function addFruit(){
   const fruit = FRUITS[index];
 
   const body = Bodies.circle(300, 50, fruit.radius,{
+    index: index, // 이후 collision Event 에서 index 비교시 사용.
     isSleeping: true, // 이벤트 전까지 더이상 떨어지지 않고 keep 한 상태가 됨.
     render:{
       sprite: { texture: `${fruit.label}.png` }
@@ -99,5 +100,31 @@ window.onkeydown = (event) => {
       break;
   }
 }
-
+Events.on(engine, "collisionStart", (event) =>{
+  event.pairs.forEach((collision) => {
+    if (collision.bodyA.index === collision.bodyB.index){ // 만약 이벤트 발생한 A,B의 index 가 같으면 
+      const index = collision.bodyA.index;
+      if (index === FRUITS.length - 1){ // 그 과일이 수박인지 검사하고
+        return;
+      }
+      World.remove(world, [collision.bodyA, collision.bodyB]); // 두 과일 삭제하고
+      // 두 과일 다음 과일 생성
+      const newFruit = FRUITS[index+1]; 
+      const newBody = Bodies.circle(
+        //충돌이 일어난 x, y 좌표에
+        collision.collision.supports[0].x,
+        collision.collision.supports[0].y,
+        // 다음 과일 생성
+        newFruit.radius, 
+        {
+          render: { 
+            sprite: { texture :`${newFruit.label}.png` }
+          },
+          index : index + 1,
+        }
+      );
+      World.add(world, newBody); // 생성한 두 과일은 World에 적용
+    }
+  });
+});
 addFruit();
