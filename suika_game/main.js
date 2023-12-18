@@ -1,4 +1,5 @@
 import { Bodies, Engine, Render, Runner, World } from "matter-js";
+import { FRUITS } from "./fruits"
 
 const engine = Engine.create();
 const render = Render.create({
