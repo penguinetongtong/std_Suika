@@ -44,6 +44,9 @@ Runner.run(engine);
 
 let currentBody = null;
 let currentFruit = null;
+// 과일이 내려가기 시작하는 1초 동안에는 사용자가 아무런 버튼조작을 못하게 하는 변수 설정
+let disableAction = false; 
+
 
 /** 과일을 생성하는 함수 */
 function addFruit(){
@@ -68,6 +71,9 @@ function addFruit(){
  * onkeydown : 자바스크립트의 기본적인 키보드 이벤트 함수 */
 
 window.onkeydown = (event) => {
+  if(disableAction) {
+    return;
+  }
   switch (event.code) {
     case "KeyA": 
       Body.setPosition(currentBody,{
@@ -83,8 +89,15 @@ window.onkeydown = (event) => {
       break;
     case "KeyS": 
       currentBody.isSleeping = false;
-      addFruit();
+      disableAction = true;
+
+      // 1초(1000) 뒤에 addFruit() 가 실행되도록 설정
+      setTimeout(() =>{
+          addFruit();
+          disableAction = false;
+      }, 500);
       break;
   }
 }
+
 addFruit();
