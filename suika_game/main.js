@@ -47,7 +47,7 @@ let currentBody = null;
 let currentFruit = null;
 // 과일이 내려가기 시작하는 1초 동안에는 사용자가 아무런 버튼조작을 못하게 하는 변수 설정
 let disableAction = false; 
-
+let interval = null;
 
 /** 과일을 생성하는 함수 */
 function addFruit(){
@@ -78,19 +78,27 @@ window.onkeydown = (event) => {
   }
   switch (event.code) {
     case "KeyA": 
-      if (currentBody.position.x - currentFruit.radius > 30) // 벽에 과일이 닿으면 더이상 못가게
-      Body.setPosition(currentBody,{
-        x: currentBody.position.x - 10, // A 키를 두를때마다 왼쪽으로 10만큼 이동
-        y: currentBody.position.y,
+      if (interval)
+        return;
+      interval = setInterval(() => {
+        if (currentBody.position.x - currentFruit.radius > 30) // 벽에 과일이 닿으면 더이상 못가게
+        Body.setPosition(currentBody,{
+          x: currentBody.position.x - 1, // A 키를 두를때마다 왼쪽으로 1만큼 이동
+          y: currentBody.position.y,
       });
+      }, 5);
       break;
 
-    case "KeyD": 
-      if (currentBody.position.x - currentFruit.radius < 590) // 620 - 30 = 590 오른쪽벽 끝
-      Body.setPosition(currentBody,{
-        x: currentBody.position.x + 10, // A 키를 두를때마다 오른쪽으로 10만큼 이동
-        y: currentBody.position.y,
-      });
+    case "KeyD":
+      if (interval)
+        return;
+      interval = setInterval(() => {
+        if (currentBody.position.x + currentFruit.radius < 590) // 620 - 30 = 590 오른쪽벽 끝
+        Body.setPosition(currentBody,{
+          x: currentBody.position.x + 1, // A 키를 두를때마다 오른쪽으로 1만큼 이동
+          y: currentBody.position.y,
+        });
+      }, 5);
       break;
     
     case "KeyS": 
@@ -105,6 +113,17 @@ window.onkeydown = (event) => {
       break;
   }
 }
+
+// 키를 떼면 interval 을 초기화하는 함수
+window.onkeyup = (event) => {
+  switch(event.code){
+    case "KeyA":
+    case "KeyD":
+      clearInterval(interval);
+      interval = null;
+  }
+}
+
 Events.on(engine, "collisionStart", (event) =>{
   event.pairs.forEach((collision) => {
     if (collision.bodyA.index === collision.bodyB.index){ // 만약 이벤트 발생한 A,B의 index 가 같으면 
