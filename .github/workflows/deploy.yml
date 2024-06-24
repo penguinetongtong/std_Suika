@@ -12,10 +12,7 @@ jobs: # Workflow가 수행할 작업 목록
 
     steps: # 해당 Job이 수행할 세부 단계(Step), 특정 job(check-bats-version)에서 수행될 step들을 그룹핑하기 위한 선택자
       - name: Checkout repo # Step의 이름
-        # uses란 특정 액션을 실행시키라는 의미, 여기서는 v4 버전의 checkout 액션을 수행하도록 지정
         uses: actions/checkout@v4 # Github Action이 해당 저장소를 관리(read/write)할 수 있도록 Checkout
-        # checkout 액션 - 저장소를 runner에 checkout해서 코드에 대해 스크립트나 기타 작업(빌드, 테스팅 등)을 실행할 수 있도록 하는 액션
-        # 워크플로가 repo의 코드를 사용하도록 하기 위해 먼저 지정해야 하는 액션
 
       - name: Setup Node # VM에 Node.js 설치
         uses: actions/setup-node@v4
@@ -23,11 +20,13 @@ jobs: # Workflow가 수행할 작업 목록
           node-version: '20' # Node.js의 버전은 20
 
       - name: Install dependencies # 설치된 Node 버전을 기반으로 npm 의존성 설치
-        uses: bahmutov/npm-install@v1
+        run: |
+          cd suika_game
+          npm install
 
       - name: Build project # npm run build 명령어를 통해 프로젝트 빌드
         run: |
-          cd ..
+          cd suika_game
           npm run build
 
       - name: Upload production-ready build files # Github Action에서 빌드된 리소스(html, css, js)를 사용할 수 있도록 워크플로에 사용되는 데이터들을 Artifact에 업로드
