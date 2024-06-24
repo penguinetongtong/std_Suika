@@ -27,6 +27,7 @@ jobs: # Workflow가 수행할 작업 목록
 
       - name: Build project # npm run build 명령어를 통해 프로젝트 빌드
         run: |
+          ls
           cd suika_game
           npm run build
 
