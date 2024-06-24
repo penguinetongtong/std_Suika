@@ -19,9 +19,11 @@ jobs: # Workflow가 수행할 작업 목록
         with: 
           node-version: '20' # Node.js의 버전은 20
 
-      - name: Install dependencies # 설치된 Node 버전을 기반으로 npm 의존성 설치
+      - name: Clean and install dependencies # 의존성 설치 전 캐시 및 lock 파일 삭제
         run: |
           cd suika_game
+          rm -rf node_modules
+          rm -f package-lock.json
           npm install
 
       - name: Build project # npm run build 명령어를 통해 프로젝트 빌드
@@ -40,7 +42,6 @@ jobs: # Workflow가 수행할 작업 목록
     needs: build # 현재 job(deploy)에 대한 의존성, build job이 선행되어야 deploy job이 수행될 수 있음
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/main' # deploy를 수행하기 위해 현재 브랜치가 main인지 확인
-    # github.ref란 Github Actions 내부에서 참조하기 위한 Context 변수
 
     steps:
       - name: Checkout repo # deploy job에서도 코드를 체크아웃해야 함
