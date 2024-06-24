@@ -26,7 +26,8 @@ jobs: # Workflow가 수행할 작업 목록
         uses: bahmutov/npm-install@v1
 
       - name: Build project # npm run build 명령어를 통해 프로젝트 빌드
-        run: 
+        run: |
+          cd ..
           npm run build
 
       - name: Upload production-ready build files # Github Action에서 빌드된 리소스(html, css, js)를 사용할 수 있도록 워크플로에 사용되는 데이터들을 Artifact에 업로드
