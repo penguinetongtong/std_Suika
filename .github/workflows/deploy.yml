@@ -22,8 +22,6 @@ jobs: # Workflow가 수행할 작업 목록
       - name: Clean and install dependencies # 의존성 설치 전 캐시 및 lock 파일 삭제
         run: |
           cd suika_game
-          rm -rf node_modules
-          rm -f package-lock.json
           npm install
 
       - name: Build project # npm run build 명령어를 통해 프로젝트 빌드
